@@ -1,0 +1,78 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.13.0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2
+
+      - name: Run chart-testing (lint)
+        run: ct lint --target-branch ${{ github.event.repository.default_branch }} --charts charts/logward
+
+      - name: Validate templates
+        run: |
+          helm template logward ./charts/logward \
+            --set timescaledb.auth.password=testpassword \
+            --set timescaledb.auth.postgresPassword=testpassword \
+            --set redis.auth.password=testpassword \
+            > /dev/null
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.13.0
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1
+
+      - name: Install chart
+        run: |
+          helm install logward ./charts/logward \
+            --namespace logward \
+            --create-namespace \
+            --set timescaledb.auth.password=testpassword \
+            --set timescaledb.auth.postgresPassword=testpassword \
+            --set redis.auth.password=testpassword \
+            --wait \
+            --timeout 5m
+
+      - name: Verify pods are running
+        run: |
+          kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=logward -n logward --timeout=300s
+
+      - name: Check services
+        run: |
+          kubectl get svc -n logward
+          kubectl get pods -n logward -o wide

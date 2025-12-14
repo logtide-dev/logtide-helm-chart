@@ -1,0 +1,17 @@
+{{- if .Values.timescaledb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "logward.fullname" . }}-timescaledb
+  labels:
+    {{- include "logward.timescaledb.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: postgresql
+      protocol: TCP
+      name: postgresql
+  selector:
+    {{- include "logward.timescaledb.selectorLabels" . | nindent 4 }}
+{{- end }}

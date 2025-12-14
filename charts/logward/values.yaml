@@ -1,0 +1,373 @@
+# LogWard Helm Chart - Default Values
+# https://logward.dev
+
+# Global settings
+global:
+  # Image pull secrets for private registries
+  imagePullSecrets: []
+  # Storage class for persistent volumes
+  storageClass: ""
+
+# =============================================================================
+# BACKEND CONFIGURATION
+# =============================================================================
+backend:
+  enabled: true
+  replicaCount: 2
+
+  image:
+    repository: ghcr.io/logward-dev/logward-backend
+    tag: ""  # Defaults to appVersion
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+  # Horizontal Pod Autoscaler
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  # Health probes
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # Node selector, tolerations, affinity
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Pod disruption budget
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+
+# =============================================================================
+# FRONTEND CONFIGURATION
+# =============================================================================
+frontend:
+  enabled: true
+  replicaCount: 2
+
+  image:
+    repository: ghcr.io/logward-dev/logward-frontend
+    tag: ""  # Defaults to appVersion
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# =============================================================================
+# WORKER CONFIGURATION (BullMQ)
+# =============================================================================
+worker:
+  enabled: true
+  replicaCount: 2
+
+  image:
+    repository: ghcr.io/logward-dev/logward-backend
+    tag: ""  # Defaults to appVersion
+    pullPolicy: IfNotPresent
+
+  # Worker command override
+  command: ["node"]
+  args: ["dist/worker.js"]
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 70
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# =============================================================================
+# INGRESS CONFIGURATION
+# =============================================================================
+ingress:
+  enabled: false
+  className: nginx
+
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+
+  hosts:
+    - host: logward.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service: frontend
+        - path: /api
+          pathType: Prefix
+          service: backend
+        - path: /v1
+          pathType: Prefix
+          service: backend
+
+  tls: []
+    # - secretName: logward-tls
+    #   hosts:
+    #     - logward.example.com
+
+# =============================================================================
+# TIMESCALEDB CONFIGURATION
+# =============================================================================
+timescaledb:
+  # Use embedded TimescaleDB StatefulSet
+  enabled: true
+
+  image:
+    repository: timescale/timescaledb
+    tag: latest-pg15
+    pullPolicy: IfNotPresent
+
+  auth:
+    # Will be stored in Secret
+    postgresPassword: ""  # Required - set via --set or values file
+    database: logward
+    username: logward
+    password: ""  # Required - set via --set or values file
+
+  persistence:
+    enabled: true
+    size: 50Gi
+    storageClass: ""
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+  # TimescaleDB tuning
+  config:
+    shared_buffers: 1GB
+    effective_cache_size: 3GB
+    maintenance_work_mem: 512MB
+    work_mem: 64MB
+    max_connections: 200
+    timescaledb.max_background_workers: 8
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# External database (if timescaledb.enabled: false)
+externalDatabase:
+  host: ""
+  port: 5432
+  database: logward
+  username: logward
+  password: ""
+  # Use existing secret
+  existingSecret: ""
+  existingSecretPasswordKey: "password"
+
+# =============================================================================
+# REDIS CONFIGURATION
+# =============================================================================
+redis:
+  # Use embedded Redis StatefulSet
+  enabled: true
+
+  image:
+    repository: redis
+    tag: 7-alpine
+    pullPolicy: IfNotPresent
+
+  auth:
+    enabled: true
+    password: ""  # Required - set via --set or values file
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ""
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# External Redis (if redis.enabled: false)
+externalRedis:
+  host: ""
+  port: 6379
+  password: ""
+  # Use existing secret
+  existingSecret: ""
+  existingSecretPasswordKey: "password"
+
+# =============================================================================
+# APPLICATION CONFIGURATION
+# =============================================================================
+config:
+  # Node environment
+  nodeEnv: production
+
+  # Log level (debug, info, warn, error)
+  logLevel: info
+
+  # JWT secret for authentication (auto-generated if empty)
+  jwtSecret: ""
+
+  # Session secret (auto-generated if empty)
+  sessionSecret: ""
+
+  # CORS origins (comma-separated)
+  corsOrigins: ""
+
+  # Rate limiting
+  rateLimit:
+    auth: 10  # requests per 15 minutes
+    ingestion: 200  # requests per minute
+
+  # Retention policy (days)
+  retention:
+    logs: 30
+    alerts: 90
+    incidents: 365
+
+  # SMTP configuration for email notifications
+  smtp:
+    enabled: false
+    host: ""
+    port: 587
+    secure: false
+    user: ""
+    password: ""
+    from: "noreply@logward.dev"
+    # Use existing secret for SMTP credentials
+    existingSecret: ""
+
+# =============================================================================
+# MONITORING & OBSERVABILITY
+# =============================================================================
+metrics:
+  enabled: true
+
+  # ServiceMonitor for Prometheus Operator
+  serviceMonitor:
+    enabled: false
+    namespace: ""
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+
+# =============================================================================
+# SERVICE MESH
+# =============================================================================
+serviceMesh:
+  # Istio sidecar injection
+  istio:
+    enabled: false
+
+  # Linkerd annotations
+  linkerd:
+    enabled: false
+
+# =============================================================================
+# SECURITY CONTEXT
+# =============================================================================
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault
+
+# =============================================================================
+# SERVICE ACCOUNT
+# =============================================================================
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# =============================================================================
+# NETWORK POLICIES
+# =============================================================================
+networkPolicy:
+  enabled: false
+  # Allow traffic from specific namespaces
+  allowedNamespaces: []

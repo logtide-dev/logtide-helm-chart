@@ -1,0 +1,32 @@
+{{- if and .Values.timescaledb.enabled .Values.timescaledb.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "logward.fullname" . }}-timescaledb-config
+  labels:
+    {{- include "logward.timescaledb.labels" . | nindent 4 }}
+data:
+  postgresql.conf: |
+    # Connection Settings
+    listen_addresses = '*'
+    max_connections = {{ .Values.timescaledb.config.max_connections | default 200 }}
+
+    # Memory Settings
+    shared_buffers = {{ .Values.timescaledb.config.shared_buffers | default "256MB" }}
+    effective_cache_size = {{ .Values.timescaledb.config.effective_cache_size | default "768MB" }}
+    maintenance_work_mem = {{ .Values.timescaledb.config.maintenance_work_mem | default "128MB" }}
+    work_mem = {{ .Values.timescaledb.config.work_mem | default "16MB" }}
+
+    # TimescaleDB Settings
+    timescaledb.max_background_workers = {{ .Values.timescaledb.config.timescaledb_max_background_workers | default 8 }}
+
+    # WAL Settings
+    wal_level = replica
+    max_wal_senders = 3
+    wal_keep_size = 1GB
+
+    # Logging
+    log_destination = 'stderr'
+    logging_collector = off
+    log_min_duration_statement = 1000
+{{- end }}

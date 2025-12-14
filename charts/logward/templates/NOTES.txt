@@ -1,0 +1,88 @@
+
+================================================================================
+   _                     __          __            _
+  | |                    \ \        / /           | |
+  | |     ___   __ ___      \ \  /\  / /_ _ _ __ __| |
+  | |    / _ \ / _` \ \ /\ / / '_ \| '__/ _` |
+  | |___| (_) | (_| |\ V  V /| (_| | | | (_| |
+  |______\___/ \__, | \_/\_/  \__,_|_|  \__,_|
+                __/ |
+               |___/   v{{ .Chart.AppVersion }}
+================================================================================
+
+Thank you for installing {{ .Chart.Name }}!
+
+{{- if .Values.ingress.enabled }}
+
+LogWard is now accessible at:
+{{- range .Values.ingress.hosts }}
+  https://{{ .host }}
+{{- end }}
+
+{{- else }}
+
+To access LogWard, run the following commands:
+
+  # Frontend
+  kubectl port-forward svc/{{ include "logward.fullname" . }}-frontend 3000:{{ .Values.frontend.service.port }} -n {{ .Release.Namespace }}
+
+  # Backend API
+  kubectl port-forward svc/{{ include "logward.fullname" . }}-backend 3001:{{ .Values.backend.service.port }} -n {{ .Release.Namespace }}
+
+Then open http://localhost:3000 in your browser.
+
+{{- end }}
+
+================================================================================
+COMPONENTS STATUS
+================================================================================
+
+Backend:  {{ if .Values.backend.enabled }}Enabled ({{ .Values.backend.replicaCount }} replicas){{ else }}Disabled{{ end }}
+Frontend: {{ if .Values.frontend.enabled }}Enabled ({{ .Values.frontend.replicaCount }} replicas){{ else }}Disabled{{ end }}
+Worker:   {{ if .Values.worker.enabled }}Enabled ({{ .Values.worker.replicaCount }} replicas){{ else }}Disabled{{ end }}
+
+Database: {{ if .Values.timescaledb.enabled }}Embedded TimescaleDB{{ else }}External ({{ .Values.externalDatabase.host }}){{ end }}
+Redis:    {{ if .Values.redis.enabled }}Embedded Redis{{ else }}External ({{ .Values.externalRedis.host }}){{ end }}
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Wait for all pods to be ready:
+   kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }} -w
+
+2. Check the logs:
+   kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }} -f
+
+3. Create your first organization and start ingesting logs!
+
+{{- if .Values.timescaledb.enabled }}
+
+DATABASE CONNECTION:
+  Host: {{ include "logward.fullname" . }}-timescaledb
+  Port: 5432
+  Database: {{ .Values.timescaledb.auth.database }}
+  Username: {{ .Values.timescaledb.auth.username }}
+  Password: kubectl get secret {{ include "logward.fullname" . }}-timescaledb -n {{ .Release.Namespace }} -o jsonpath="{.data.password}" | base64 -d
+
+{{- end }}
+
+{{- if .Values.redis.enabled }}
+
+REDIS CONNECTION:
+  Host: {{ include "logward.fullname" . }}-redis
+  Port: 6379
+  Password: kubectl get secret {{ include "logward.fullname" . }}-redis -n {{ .Release.Namespace }} -o jsonpath="{.data.password}" | base64 -d
+
+{{- end }}
+
+================================================================================
+DOCUMENTATION
+================================================================================
+
+  Website:  https://logward.dev
+  Docs:     https://docs.logward.dev
+  GitHub:   https://github.com/logward-dev/logward
+  Support:  https://github.com/logward-dev/logward/issues
+
+================================================================================

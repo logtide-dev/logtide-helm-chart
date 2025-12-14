@@ -1,0 +1,38 @@
+apiVersion: v2
+name: logward
+description: A Helm chart for LogWard - Open-source log management and SIEM platform
+type: application
+version: 1.0.0
+appVersion: "0.3.0"
+
+home: https://logward.dev
+icon: https://raw.githubusercontent.com/logward-dev/logward-helm-chart/main/charts/logward/icon.png
+sources:
+  - https://github.com/logward-dev/logward
+
+maintainers:
+  - name: LogWard Team
+    email: team@logward.dev
+    url: https://github.com/logward-dev
+
+keywords:
+  - logging
+  - logs
+  - siem
+  - security
+  - observability
+  - monitoring
+  - timescaledb
+  - sigma
+
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://docs.logward.dev
+    - name: GitHub
+      url: https://github.com/logward-dev/logward
+  artifacthub.io/category: monitoring-logging
+
+# Note: This chart includes embedded TimescaleDB and Redis StatefulSets.
+# For production, consider using external managed databases.

@@ -1,0 +1,13 @@
+{{- if and .Values.backend.enabled .Values.backend.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "logward.fullname" . }}-backend
+  labels:
+    {{- include "logward.backend.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.backend.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "logward.backend.selectorLabels" . | nindent 6 }}
+{{- end }}
