@@ -89,6 +89,19 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Create gh-pages branch if not exists
+        run: |
+          if ! git ls-remote --heads origin gh-pages | grep -q gh-pages; then
+            echo "Creating gh-pages branch..."
+            git checkout --orphan gh-pages
+            git rm -rf .
+            echo "# LogWard Helm Charts" > README.md
+            git add README.md
+            git commit -m "Initial gh-pages branch"
+            git push origin gh-pages
+            git checkout main
+          fi
+
       - name: Set up Helm
         uses: azure/setup-helm@v3
         with:
