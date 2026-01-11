@@ -11,6 +11,41 @@ entries:
           url: https://github.com/logtide-dev/logtide
     apiVersion: v2
     appVersion: 0.3.0
+    created: "2026-01-11T21:04:00.727545005Z"
+    description: A Helm chart for LogTide - Open-source log management and SIEM platform
+    digest: 4b1b17c83e322a9ec9c75baaed7aa6a58b0bde682c9976ed7f17728034ebc553
+    home: https://logtide.dev
+    icon: https://raw.githubusercontent.com/logtide-dev/logtide-helm-chart/main/charts/logtide/icon.png
+    keywords:
+    - logging
+    - logs
+    - siem
+    - security
+    - observability
+    - monitoring
+    - timescaledb
+    - sigma
+    maintainers:
+    - email: team@logtide.dev
+      name: LogTide Team
+      url: https://github.com/logtide-dev
+    name: logtide
+    sources:
+    - https://github.com/logtide-dev/logtide
+    type: application
+    urls:
+    - https://github.com/logtide-dev/logtide-helm-chart/releases/download/logtide-2.0.0/logtide-2.0.0.tgz
+    version: 2.0.0
+  - annotations:
+      artifacthub.io/category: monitoring-logging
+      artifacthub.io/license: MIT
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://docs.logtide.dev
+        - name: GitHub
+          url: https://github.com/logtide-dev/logtide
+    apiVersion: v2
+    appVersion: 0.3.0
     created: "2026-01-11T20:57:42.867932653Z"
     description: A Helm chart for LogTide - Open-source log management and SIEM platform
     digest: a6064d6a1ac4980ac77033941aef68485c35ad970467e914f3af1dadc0e99dfa
@@ -142,4 +177,4 @@ entries:
     urls:
     - https://github.com/logward-dev/logward-helm-chart/releases/download/logward-1.0.2/logward-1.0.2.tgz
     version: 1.0.2
-generated: "2026-01-11T20:57:42.867949605Z"
+generated: "2026-01-11T21:04:00.727563389Z"
