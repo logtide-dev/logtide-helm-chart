@@ -285,6 +285,6 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Links
 
 - [LogTide Website](https://logtide.dev)
-- [Documentation](https://docs.logtide.dev)
+- [Documentation](https://logtide.dev/docs)
 - [Main Repository](https://github.com/logtide-dev/logtide)
 - [Issues](https://github.com/logtide-dev/logtide-helm-chart/issues)
