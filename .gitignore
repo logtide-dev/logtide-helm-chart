@@ -16,3 +16,6 @@ Thumbs.db
 
 # Debug
 *.log
+
+# Claude
+.claude/

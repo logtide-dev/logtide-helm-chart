@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "logward.fullname" . }}-timescaledb
+  name: {{ include "logtide.fullname" . }}-timescaledb
   labels:
-    {{- include "logward.timescaledb.labels" . | nindent 4 }}
+    {{- include "logtide.timescaledb.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -13,5 +13,5 @@ spec:
       protocol: TCP
       name: postgresql
   selector:
-    {{- include "logward.timescaledb.selectorLabels" . | nindent 4 }}
+    {{- include "logtide.timescaledb.selectorLabels" . | nindent 4 }}
 {{- end }}

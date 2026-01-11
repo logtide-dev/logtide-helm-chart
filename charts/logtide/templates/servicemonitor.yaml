@@ -2,12 +2,12 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "logward.fullname" . }}
+  name: {{ include "logtide.fullname" . }}
   {{- if .Values.metrics.serviceMonitor.namespace }}
   namespace: {{ .Values.metrics.serviceMonitor.namespace }}
   {{- end }}
   labels:
-    {{- include "logward.labels" . | nindent 4 }}
+    {{- include "logtide.labels" . | nindent 4 }}
     {{- with .Values.metrics.serviceMonitor.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -18,7 +18,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "logward.backend.selectorLabels" . | nindent 6 }}
+      {{- include "logtide.backend.selectorLabels" . | nindent 6 }}
   endpoints:
     - port: http
       path: /metrics

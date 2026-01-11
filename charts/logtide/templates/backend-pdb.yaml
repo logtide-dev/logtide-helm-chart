@@ -2,12 +2,12 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "logward.fullname" . }}-backend
+  name: {{ include "logtide.fullname" . }}-backend
   labels:
-    {{- include "logward.backend.labels" . | nindent 4 }}
+    {{- include "logtide.backend.labels" . | nindent 4 }}
 spec:
   minAvailable: {{ .Values.backend.podDisruptionBudget.minAvailable }}
   selector:
     matchLabels:
-      {{- include "logward.backend.selectorLabels" . | nindent 6 }}
+      {{- include "logtide.backend.selectorLabels" . | nindent 6 }}
 {{- end }}

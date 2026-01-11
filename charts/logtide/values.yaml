@@ -1,5 +1,5 @@
-# LogWard Helm Chart - Default Values
-# https://logward.dev
+# LogTide Helm Chart - Default Values
+# https://logtide.dev
 
 # Global settings
 global:
@@ -16,7 +16,7 @@ backend:
   replicaCount: 2
 
   image:
-    repository: ghcr.io/logward-dev/logward-backend
+    repository: ghcr.io/logtide-dev/logtide-backend
     tag: ""  # Defaults to appVersion
     pullPolicy: IfNotPresent
 
@@ -73,7 +73,7 @@ frontend:
   replicaCount: 2
 
   image:
-    repository: ghcr.io/logward-dev/logward-frontend
+    repository: ghcr.io/logtide-dev/logtide-frontend
     tag: ""  # Defaults to appVersion
     pullPolicy: IfNotPresent
 
@@ -121,7 +121,7 @@ worker:
   replicaCount: 2
 
   image:
-    repository: ghcr.io/logward-dev/logward-backend
+    repository: ghcr.io/logtide-dev/logtide-backend
     tag: ""  # Defaults to appVersion
     pullPolicy: IfNotPresent
 
@@ -159,7 +159,7 @@ ingress:
     # cert-manager.io/cluster-issuer: letsencrypt-prod
 
   hosts:
-    - host: logward.example.com
+    - host: logtide.example.com
       paths:
         - path: /
           pathType: Prefix
@@ -172,9 +172,9 @@ ingress:
           service: backend
 
   tls: []
-    # - secretName: logward-tls
+    # - secretName: logtide-tls
     #   hosts:
-    #     - logward.example.com
+    #     - logtide.example.com
 
 # =============================================================================
 # TIMESCALEDB CONFIGURATION
@@ -191,8 +191,8 @@ timescaledb:
   auth:
     # Will be stored in Secret
     postgresPassword: ""  # Required - set via --set or values file
-    database: logward
-    username: logward
+    database: logtide
+    username: logtide
     password: ""  # Required - set via --set or values file
 
   persistence:
@@ -225,8 +225,8 @@ timescaledb:
 externalDatabase:
   host: ""
   port: 5432
-  database: logward
-  username: logward
+  database: logtide
+  username: logtide
   password: ""
   # Use existing secret
   existingSecret: ""
@@ -312,7 +312,7 @@ config:
     secure: false
     user: ""
     password: ""
-    from: "noreply@logward.dev"
+    from: "noreply@logtide.dev"
     # Use existing secret for SMTP credentials
     existingSecret: ""
 

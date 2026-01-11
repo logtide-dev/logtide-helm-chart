@@ -1,24 +1,24 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/logward-dev/logward/main/docs/images/logo.png" alt="LogWard Logo" width="400">
+  <img src="https://raw.githubusercontent.com/logtide-dev/logtide/main/docs/images/logo.png" alt="LogTide Logo" width="400">
 </p>
 
-<h1 align="center">LogWard Helm Chart</h1>
+<h1 align="center">LogTide Helm Chart</h1>
 
 <p align="center">
-  <a href="https://artifacthub.io/packages/helm/logward/logward"><img src="https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/logward" alt="Artifact Hub"></a>
+  <a href="https://artifacthub.io/packages/helm/logtide/logtide"><img src="https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/logtide" alt="Artifact Hub"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
-  <a href="https://github.com/logward-dev/logward-helm-chart/releases"><img src="https://img.shields.io/github/v/release/logward-dev/logward-helm-chart" alt="Release"></a>
+  <a href="https://github.com/logtide-dev/logtide-helm-chart/releases"><img src="https://img.shields.io/github/v/release/logtide-dev/logtide-helm-chart" alt="Release"></a>
 </p>
 
 <p align="center">
-  Official Helm chart for deploying <a href="https://logward.dev">LogWard</a> on Kubernetes.
+  Official Helm chart for deploying <a href="https://logtide.dev">LogTide</a> on Kubernetes.
 </p>
 
 ---
 
 ## Overview
 
-LogWard is an open-source log management and SIEM platform featuring:
+LogTide is an open-source log management and SIEM platform featuring:
 
 - High-performance log ingestion (10,000+ logs/sec)
 - Real-time log streaming via SSE
@@ -38,7 +38,7 @@ LogWard is an open-source log management and SIEM platform featuring:
 ### Add the Helm repository
 
 ```bash
-helm repo add logward https://logward-dev.github.io/logward-helm-chart
+helm repo add logtide https://logtide-dev.github.io/logtide-helm-chart
 helm repo update
 ```
 
@@ -46,11 +46,11 @@ helm repo update
 
 ```bash
 # Create namespace
-kubectl create namespace logward
+kubectl create namespace logtide
 
 # Install with default values
-helm install logward logward/logward \
-  --namespace logward \
+helm install logtide logtide/logtide \
+  --namespace logtide \
   --set timescaledb.auth.password=<your-db-password> \
   --set timescaledb.auth.postgresPassword=<your-postgres-password> \
   --set redis.auth.password=<your-redis-password>
@@ -59,11 +59,11 @@ helm install logward logward/logward \
 ### Install from source
 
 ```bash
-git clone https://github.com/logward-dev/logward-helm-chart.git
-cd logward-helm-chart
+git clone https://github.com/logtide-dev/logtide-helm-chart.git
+cd logtide-helm-chart
 
-helm install logward ./charts/logward \
-  --namespace logward \
+helm install logtide ./charts/logtide \
+  --namespace logtide \
   --create-namespace \
   --set timescaledb.auth.password=<your-db-password> \
   --set timescaledb.auth.postgresPassword=<your-postgres-password> \
@@ -72,7 +72,7 @@ helm install logward ./charts/logward \
 
 ## Configuration
 
-See [values.yaml](charts/logward/values.yaml) for the full list of configurable parameters.
+See [values.yaml](charts/logtide/values.yaml) for the full list of configurable parameters.
 
 ### Key Parameters
 
@@ -96,8 +96,8 @@ timescaledb:
 externalDatabase:
   host: my-timescaledb.example.com
   port: 5432
-  database: logward
-  username: logward
+  database: logtide
+  username: logtide
   password: secret
   # Or use existing secret:
   # existingSecret: my-db-secret
@@ -125,7 +125,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: logward.example.com
+    - host: logtide.example.com
       paths:
         - path: /
           pathType: Prefix
@@ -137,9 +137,9 @@ ingress:
           pathType: Prefix
           service: backend
   tls:
-    - secretName: logward-tls
+    - secretName: logtide-tls
       hosts:
-        - logward.example.com
+        - logtide.example.com
 ```
 
 ### Enable Prometheus Monitoring
@@ -187,7 +187,7 @@ ingress:
   enabled: true
   className: gce
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: logward-ip
+    kubernetes.io/ingress.global-static-ip-name: logtide-ip
 
 timescaledb:
   persistence:
@@ -215,7 +215,7 @@ timescaledb:
 
 ```bash
 helm repo update
-helm upgrade logward logward/logward --namespace logward
+helm upgrade logtide logtide/logtide --namespace logtide
 ```
 
 ### From 0.x to 1.x
@@ -225,10 +225,10 @@ No breaking changes. Standard upgrade process applies.
 ## Uninstalling
 
 ```bash
-helm uninstall logward --namespace logward
+helm uninstall logtide --namespace logtide
 
 # If you want to delete PVCs as well:
-kubectl delete pvc -l app.kubernetes.io/instance=logward -n logward
+kubectl delete pvc -l app.kubernetes.io/instance=logtide -n logtide
 ```
 
 ## Troubleshooting
@@ -237,37 +237,37 @@ kubectl delete pvc -l app.kubernetes.io/instance=logward -n logward
 
 Check pod events:
 ```bash
-kubectl describe pod -l app.kubernetes.io/instance=logward -n logward
+kubectl describe pod -l app.kubernetes.io/instance=logtide -n logtide
 ```
 
 Check logs:
 ```bash
-kubectl logs -l app.kubernetes.io/instance=logward -n logward --all-containers
+kubectl logs -l app.kubernetes.io/instance=logtide -n logtide --all-containers
 ```
 
 ### Database connection issues
 
 Verify database secret:
 ```bash
-kubectl get secret logward-timescaledb -n logward -o jsonpath="{.data.password}" | base64 -d
+kubectl get secret logtide-timescaledb -n logtide -o jsonpath="{.data.password}" | base64 -d
 ```
 
 Test connection:
 ```bash
 kubectl run pg-test --rm -it --image=postgres:15 --restart=Never -- \
-  psql -h logward-timescaledb -U logward -d logward
+  psql -h logtide-timescaledb -U logtide -d logtide
 ```
 
 ### Ingress not working
 
 Check Ingress status:
 ```bash
-kubectl describe ingress logward -n logward
+kubectl describe ingress logtide -n logtide
 ```
 
 Verify services:
 ```bash
-kubectl get svc -n logward
+kubectl get svc -n logtide
 ```
 
 ## Contributing
@@ -275,7 +275,7 @@ kubectl get svc -n logward
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run `helm lint charts/logward`
+4. Run `helm lint charts/logtide`
 5. Submit a pull request
 
 ## License
@@ -284,7 +284,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Links
 
-- [LogWard Website](https://logward.dev)
-- [Documentation](https://docs.logward.dev)
-- [Main Repository](https://github.com/logward-dev/logward)
-- [Issues](https://github.com/logward-dev/logward-helm-chart/issues)
+- [LogTide Website](https://logtide.dev)
+- [Documentation](https://docs.logtide.dev)
+- [Main Repository](https://github.com/logtide-dev/logtide)
+- [Issues](https://github.com/logtide-dev/logtide-helm-chart/issues)

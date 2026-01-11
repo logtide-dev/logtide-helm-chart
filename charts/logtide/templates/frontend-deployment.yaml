@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "logward.fullname" . }}-frontend
+  name: {{ include "logtide.fullname" . }}-frontend
   labels:
-    {{- include "logward.frontend.labels" . | nindent 4 }}
+    {{- include "logtide.frontend.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.frontend.autoscaling.enabled }}
   replicas: {{ .Values.frontend.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "logward.frontend.selectorLabels" . | nindent 6 }}
+      {{- include "logtide.frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -22,20 +22,20 @@ spec:
         linkerd.io/inject: enabled
         {{- end }}
       labels:
-        {{- include "logward.frontend.selectorLabels" . | nindent 8 }}
+        {{- include "logtide.frontend.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "logward.serviceAccountName" . }}
+      serviceAccountName: {{ include "logtide.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: frontend
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "logward.frontend.image" . }}
+          image: {{ include "logtide.frontend.image" . }}
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
             - name: http
@@ -45,7 +45,7 @@ spec:
             - name: NODE_ENV
               value: {{ .Values.config.nodeEnv | quote }}
             - name: PUBLIC_API_URL
-              value: "http://{{ include "logward.fullname" . }}-backend:{{ .Values.backend.service.port }}"
+              value: "http://{{ include "logtide.fullname" . }}-backend:{{ .Values.backend.service.port }}"
             - name: ORIGIN
               {{- if .Values.ingress.enabled }}
               value: "https://{{ (index .Values.ingress.hosts 0).host }}"

@@ -32,11 +32,11 @@ jobs:
         uses: helm/chart-testing-action@v2
 
       - name: Run chart-testing (lint)
-        run: ct lint --config ct.yaml --charts charts/logward
+        run: ct lint --config ct.yaml --charts charts/logtide
 
       - name: Validate templates
         run: |
-          helm template logward ./charts/logward \
+          helm template logtide ./charts/logtide \
             --set timescaledb.auth.password=testpassword \
             --set timescaledb.auth.postgresPassword=testpassword \
             --set redis.auth.password=testpassword \
@@ -61,8 +61,8 @@ jobs:
 
       - name: Install chart
         run: |
-          helm install logward ./charts/logward \
-            --namespace logward \
+          helm install logtide ./charts/logtide \
+            --namespace logtide \
             --create-namespace \
             --set timescaledb.auth.password=testpassword \
             --set timescaledb.auth.postgresPassword=testpassword \
@@ -72,9 +72,9 @@ jobs:
 
       - name: Verify pods are running
         run: |
-          kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=logward -n logward --timeout=300s
+          kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=logtide -n logtide --timeout=300s
 
       - name: Check services
         run: |
-          kubectl get svc -n logward
-          kubectl get pods -n logward -o wide
+          kubectl get svc -n logtide
+          kubectl get pods -n logtide -o wide

@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "logward.fullname" . }}
+  name: {{ include "logtide.fullname" . }}
   labels:
-    {{- include "logward.labels" . | nindent 4 }}
+    {{- include "logtide.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -34,11 +34,11 @@ spec:
             backend:
               service:
                 {{- if eq .service "backend" }}
-                name: {{ include "logward.fullname" $ }}-backend
+                name: {{ include "logtide.fullname" $ }}-backend
                 port:
                   number: {{ $.Values.backend.service.port }}
                 {{- else }}
-                name: {{ include "logward.fullname" $ }}-frontend
+                name: {{ include "logtide.fullname" $ }}-frontend
                 port:
                   number: {{ $.Values.frontend.service.port }}
                 {{- end }}

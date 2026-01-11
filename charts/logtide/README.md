@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/logward-dev/logward/main/docs/images/logo.png" alt="LogWard Logo" width="400">
+  <img src="https://raw.githubusercontent.com/logtide-dev/logtide/main/docs/images/logo.png" alt="LogTide Logo" width="400">
 </p>
 
-# LogWard Helm Chart
+# LogTide Helm Chart
 
-A Helm chart for deploying LogWard on Kubernetes.
+A Helm chart for deploying LogTide on Kubernetes.
 
 ## Introduction
 
-This chart bootstraps a LogWard deployment on a Kubernetes cluster using the Helm package manager.
+This chart bootstraps a LogTide deployment on a Kubernetes cluster using the Helm package manager.
 
 ## Prerequisites
 
@@ -19,8 +19,8 @@ This chart bootstraps a LogWard deployment on a Kubernetes cluster using the Hel
 ## Installing the Chart
 
 ```bash
-helm install logward ./logward \
-  --namespace logward \
+helm install logtide ./logtide \
+  --namespace logtide \
   --create-namespace \
   --set timescaledb.auth.password=<password> \
   --set timescaledb.auth.postgresPassword=<password> \
@@ -44,7 +44,7 @@ The following table lists the configurable parameters and their default values.
 |-----------|-------------|---------|
 | `backend.enabled` | Enable backend | `true` |
 | `backend.replicaCount` | Number of replicas | `2` |
-| `backend.image.repository` | Image repository | `ghcr.io/logward-dev/logward-backend` |
+| `backend.image.repository` | Image repository | `ghcr.io/logtide-dev/logtide-backend` |
 | `backend.image.tag` | Image tag | `""` (uses appVersion) |
 | `backend.resources.requests.cpu` | CPU request | `100m` |
 | `backend.resources.requests.memory` | Memory request | `256Mi` |
@@ -60,7 +60,7 @@ The following table lists the configurable parameters and their default values.
 |-----------|-------------|---------|
 | `frontend.enabled` | Enable frontend | `true` |
 | `frontend.replicaCount` | Number of replicas | `2` |
-| `frontend.image.repository` | Image repository | `ghcr.io/logward-dev/logward-frontend` |
+| `frontend.image.repository` | Image repository | `ghcr.io/logtide-dev/logtide-frontend` |
 | `frontend.resources.requests.cpu` | CPU request | `50m` |
 | `frontend.resources.requests.memory` | Memory request | `128Mi` |
 
@@ -80,8 +80,8 @@ The following table lists the configurable parameters and their default values.
 | `timescaledb.enabled` | Deploy TimescaleDB | `true` |
 | `timescaledb.image.repository` | Image repository | `timescale/timescaledb` |
 | `timescaledb.image.tag` | Image tag | `latest-pg15` |
-| `timescaledb.auth.database` | Database name | `logward` |
-| `timescaledb.auth.username` | Database user | `logward` |
+| `timescaledb.auth.database` | Database name | `logtide` |
+| `timescaledb.auth.username` | Database user | `logtide` |
 | `timescaledb.auth.password` | Database password | `""` (required) |
 | `timescaledb.persistence.enabled` | Enable persistence | `true` |
 | `timescaledb.persistence.size` | PVC size | `50Gi` |
@@ -142,11 +142,11 @@ Both TimescaleDB and Redis use PersistentVolumeClaims for data persistence. Make
 ## Upgrading
 
 ```bash
-helm upgrade logward ./logward --namespace logward
+helm upgrade logtide ./logtide --namespace logtide
 ```
 
 ## Uninstalling
 
 ```bash
-helm uninstall logward --namespace logward
+helm uninstall logtide --namespace logtide
 ```

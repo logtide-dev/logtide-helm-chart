@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "logward.fullname" . }}-backend
+  name: {{ include "logtide.fullname" . }}-backend
   labels:
-    {{- include "logward.backend.labels" . | nindent 4 }}
+    {{- include "logtide.backend.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.backend.autoscaling.enabled }}
   replicas: {{ .Values.backend.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "logward.backend.selectorLabels" . | nindent 6 }}
+      {{- include "logtide.backend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -24,20 +24,20 @@ spec:
         linkerd.io/inject: enabled
         {{- end }}
       labels:
-        {{- include "logward.backend.selectorLabels" . | nindent 8 }}
+        {{- include "logtide.backend.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "logward.serviceAccountName" . }}
+      serviceAccountName: {{ include "logtide.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: backend
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "logward.backend.image" . }}
+          image: {{ include "logtide.backend.image" . }}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           ports:
             - name: http
@@ -45,34 +45,34 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: {{ include "logward.configMapName" . }}
+                name: {{ include "logtide.configMapName" . }}
             - secretRef:
-                name: {{ include "logward.secretsName" . }}
+                name: {{ include "logtide.secretsName" . }}
           env:
             - name: DATABASE_HOST
-              value: {{ include "logward.database.host" . | quote }}
+              value: {{ include "logtide.database.host" . | quote }}
             - name: DATABASE_PORT
-              value: {{ include "logward.database.port" . | quote }}
+              value: {{ include "logtide.database.port" . | quote }}
             - name: DATABASE_NAME
-              value: {{ include "logward.database.name" . | quote }}
+              value: {{ include "logtide.database.name" . | quote }}
             - name: DATABASE_USER
-              value: {{ include "logward.database.user" . | quote }}
+              value: {{ include "logtide.database.user" . | quote }}
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "logward.database.secretName" . }}
+                  name: {{ include "logtide.database.secretName" . }}
                   key: password
             - name: DATABASE_URL
               value: "postgresql://$(DATABASE_USER):$(DATABASE_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(DATABASE_NAME)"
             - name: REDIS_HOST
-              value: {{ include "logward.redis.host" . | quote }}
+              value: {{ include "logtide.redis.host" . | quote }}
             - name: REDIS_PORT
-              value: {{ include "logward.redis.port" . | quote }}
+              value: {{ include "logtide.redis.port" . | quote }}
             {{- if or .Values.redis.enabled .Values.redis.auth.enabled }}
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "logward.redis.secretName" . }}
+                  name: {{ include "logtide.redis.secretName" . }}
                   key: password
             - name: REDIS_URL
               value: "redis://:$(REDIS_PASSWORD)@$(REDIS_HOST):$(REDIS_PORT)"

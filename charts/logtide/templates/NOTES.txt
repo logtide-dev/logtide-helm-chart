@@ -14,20 +14,20 @@ Thank you for installing {{ .Chart.Name }}!
 
 {{- if .Values.ingress.enabled }}
 
-LogWard is now accessible at:
+LogTide is now accessible at:
 {{- range .Values.ingress.hosts }}
   https://{{ .host }}
 {{- end }}
 
 {{- else }}
 
-To access LogWard, run the following commands:
+To access LogTide, run the following commands:
 
   # Frontend
-  kubectl port-forward svc/{{ include "logward.fullname" . }}-frontend 3000:{{ .Values.frontend.service.port }} -n {{ .Release.Namespace }}
+  kubectl port-forward svc/{{ include "logtide.fullname" . }}-frontend 3000:{{ .Values.frontend.service.port }} -n {{ .Release.Namespace }}
 
   # Backend API
-  kubectl port-forward svc/{{ include "logward.fullname" . }}-backend 3001:{{ .Values.backend.service.port }} -n {{ .Release.Namespace }}
+  kubectl port-forward svc/{{ include "logtide.fullname" . }}-backend 3001:{{ .Values.backend.service.port }} -n {{ .Release.Namespace }}
 
 Then open http://localhost:3000 in your browser.
 
@@ -59,20 +59,20 @@ NEXT STEPS
 {{- if .Values.timescaledb.enabled }}
 
 DATABASE CONNECTION:
-  Host: {{ include "logward.fullname" . }}-timescaledb
+  Host: {{ include "logtide.fullname" . }}-timescaledb
   Port: 5432
   Database: {{ .Values.timescaledb.auth.database }}
   Username: {{ .Values.timescaledb.auth.username }}
-  Password: kubectl get secret {{ include "logward.fullname" . }}-timescaledb -n {{ .Release.Namespace }} -o jsonpath="{.data.password}" | base64 -d
+  Password: kubectl get secret {{ include "logtide.fullname" . }}-timescaledb -n {{ .Release.Namespace }} -o jsonpath="{.data.password}" | base64 -d
 
 {{- end }}
 
 {{- if .Values.redis.enabled }}
 
 REDIS CONNECTION:
-  Host: {{ include "logward.fullname" . }}-redis
+  Host: {{ include "logtide.fullname" . }}-redis
   Port: 6379
-  Password: kubectl get secret {{ include "logward.fullname" . }}-redis -n {{ .Release.Namespace }} -o jsonpath="{.data.password}" | base64 -d
+  Password: kubectl get secret {{ include "logtide.fullname" . }}-redis -n {{ .Release.Namespace }} -o jsonpath="{.data.password}" | base64 -d
 
 {{- end }}
 
@@ -80,9 +80,9 @@ REDIS CONNECTION:
 DOCUMENTATION
 ================================================================================
 
-  Website:  https://logward.dev
-  Docs:     https://docs.logward.dev
-  GitHub:   https://github.com/logward-dev/logward
-  Support:  https://github.com/logward-dev/logward/issues
+  Website:  https://logtide.dev
+  Docs:     https://docs.logtide.dev
+  GitHub:   https://github.com/logtide-dev/logtide
+  Support:  https://github.com/logtide-dev/logtide/issues
 
 ================================================================================

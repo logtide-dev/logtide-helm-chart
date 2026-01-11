@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "logward.fullname" . }}-redis
+  name: {{ include "logtide.fullname" . }}-redis
   labels:
-    {{- include "logward.redis.labels" . | nindent 4 }}
+    {{- include "logtide.redis.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ include "logward.fullname" . }}-redis
+  serviceName: {{ include "logtide.fullname" . }}-redis
   replicas: 1
   selector:
     matchLabels:
-      {{- include "logward.redis.selectorLabels" . | nindent 6 }}
+      {{- include "logtide.redis.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "logward.redis.selectorLabels" . | nindent 8 }}
+        {{- include "logtide.redis.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
@@ -48,7 +48,7 @@ spec:
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "logward.fullname" . }}-redis
+                  name: {{ include "logtide.fullname" . }}-redis
                   key: password
           {{- end }}
           livenessProbe:

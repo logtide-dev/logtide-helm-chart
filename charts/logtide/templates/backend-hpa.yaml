@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "logward.fullname" . }}-backend
+  name: {{ include "logtide.fullname" . }}-backend
   labels:
-    {{- include "logward.backend.labels" . | nindent 4 }}
+    {{- include "logtide.backend.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "logward.fullname" . }}-backend
+    name: {{ include "logtide.fullname" . }}-backend
   minReplicas: {{ .Values.backend.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.backend.autoscaling.maxReplicas }}
   metrics:

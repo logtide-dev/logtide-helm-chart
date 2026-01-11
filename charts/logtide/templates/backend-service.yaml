@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "logward.fullname" . }}-backend
+  name: {{ include "logtide.fullname" . }}-backend
   labels:
-    {{- include "logward.backend.labels" . | nindent 4 }}
+    {{- include "logtide.backend.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.backend.service.type }}
   ports:
@@ -13,5 +13,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "logward.backend.selectorLabels" . | nindent 4 }}
+    {{- include "logtide.backend.selectorLabels" . | nindent 4 }}
 {{- end }}

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "logward.configMapName" . }}
+  name: {{ include "logtide.configMapName" . }}
   labels:
-    {{- include "logward.labels" . | nindent 4 }}
+    {{- include "logtide.labels" . | nindent 4 }}
 data:
   NODE_ENV: {{ .Values.config.nodeEnv | quote }}
   LOG_LEVEL: {{ .Values.config.logLevel | quote }}

@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "logward.fullname" . }}-redis
+  name: {{ include "logtide.fullname" . }}-redis
   labels:
-    {{- include "logward.redis.labels" . | nindent 4 }}
+    {{- include "logtide.redis.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -13,5 +13,5 @@ spec:
       protocol: TCP
       name: redis
   selector:
-    {{- include "logward.redis.selectorLabels" . | nindent 4 }}
+    {{- include "logtide.redis.selectorLabels" . | nindent 4 }}
 {{- end }}

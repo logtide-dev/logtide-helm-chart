@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "logward.fullname" . }}-timescaledb
+  name: {{ include "logtide.fullname" . }}-timescaledb
   labels:
-    {{- include "logward.timescaledb.labels" . | nindent 4 }}
+    {{- include "logtide.timescaledb.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ include "logward.fullname" . }}-timescaledb
+  serviceName: {{ include "logtide.fullname" . }}-timescaledb
   replicas: 1
   selector:
     matchLabels:
-      {{- include "logward.timescaledb.selectorLabels" . | nindent 6 }}
+      {{- include "logtide.timescaledb.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "logward.timescaledb.selectorLabels" . | nindent 8 }}
+        {{- include "logtide.timescaledb.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
@@ -38,7 +38,7 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "logward.fullname" . }}-timescaledb
+                  name: {{ include "logtide.fullname" . }}-timescaledb
                   key: password
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
@@ -80,7 +80,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "logward.fullname" . }}-timescaledb-config
+            name: {{ include "logtide.fullname" . }}-timescaledb-config
       {{- end }}
       {{- with .Values.timescaledb.nodeSelector }}
       nodeSelector:

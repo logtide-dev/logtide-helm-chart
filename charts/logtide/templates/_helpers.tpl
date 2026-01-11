@@ -1,14 +1,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "logward.name" -}}
+{{- define "logtide.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "logward.fullname" -}}
+{{- define "logtide.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -24,16 +24,16 @@ Create a default fully qualified app name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "logward.chart" -}}
+{{- define "logtide.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "logward.labels" -}}
-helm.sh/chart: {{ include "logward.chart" . }}
-{{ include "logward.selectorLabels" . }}
+{{- define "logtide.labels" -}}
+helm.sh/chart: {{ include "logtide.chart" . }}
+{{ include "logtide.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -43,82 +43,82 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "logward.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "logward.name" . }}
+{{- define "logtide.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "logtide.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Backend labels
 */}}
-{{- define "logward.backend.labels" -}}
-{{ include "logward.labels" . }}
+{{- define "logtide.backend.labels" -}}
+{{ include "logtide.labels" . }}
 app.kubernetes.io/component: backend
 {{- end }}
 
-{{- define "logward.backend.selectorLabels" -}}
-{{ include "logward.selectorLabels" . }}
+{{- define "logtide.backend.selectorLabels" -}}
+{{ include "logtide.selectorLabels" . }}
 app.kubernetes.io/component: backend
 {{- end }}
 
 {{/*
 Frontend labels
 */}}
-{{- define "logward.frontend.labels" -}}
-{{ include "logward.labels" . }}
+{{- define "logtide.frontend.labels" -}}
+{{ include "logtide.labels" . }}
 app.kubernetes.io/component: frontend
 {{- end }}
 
-{{- define "logward.frontend.selectorLabels" -}}
-{{ include "logward.selectorLabels" . }}
+{{- define "logtide.frontend.selectorLabels" -}}
+{{ include "logtide.selectorLabels" . }}
 app.kubernetes.io/component: frontend
 {{- end }}
 
 {{/*
 Worker labels
 */}}
-{{- define "logward.worker.labels" -}}
-{{ include "logward.labels" . }}
+{{- define "logtide.worker.labels" -}}
+{{ include "logtide.labels" . }}
 app.kubernetes.io/component: worker
 {{- end }}
 
-{{- define "logward.worker.selectorLabels" -}}
-{{ include "logward.selectorLabels" . }}
+{{- define "logtide.worker.selectorLabels" -}}
+{{ include "logtide.selectorLabels" . }}
 app.kubernetes.io/component: worker
 {{- end }}
 
 {{/*
 TimescaleDB labels
 */}}
-{{- define "logward.timescaledb.labels" -}}
-{{ include "logward.labels" . }}
+{{- define "logtide.timescaledb.labels" -}}
+{{ include "logtide.labels" . }}
 app.kubernetes.io/component: timescaledb
 {{- end }}
 
-{{- define "logward.timescaledb.selectorLabels" -}}
-{{ include "logward.selectorLabels" . }}
+{{- define "logtide.timescaledb.selectorLabels" -}}
+{{ include "logtide.selectorLabels" . }}
 app.kubernetes.io/component: timescaledb
 {{- end }}
 
 {{/*
 Redis labels
 */}}
-{{- define "logward.redis.labels" -}}
-{{ include "logward.labels" . }}
+{{- define "logtide.redis.labels" -}}
+{{ include "logtide.labels" . }}
 app.kubernetes.io/component: redis
 {{- end }}
 
-{{- define "logward.redis.selectorLabels" -}}
-{{ include "logward.selectorLabels" . }}
+{{- define "logtide.redis.selectorLabels" -}}
+{{ include "logtide.selectorLabels" . }}
 app.kubernetes.io/component: redis
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "logward.serviceAccountName" -}}
+{{- define "logtide.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "logward.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "logtide.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -127,7 +127,7 @@ Create the name of the service account to use
 {{/*
 Backend image
 */}}
-{{- define "logward.backend.image" -}}
+{{- define "logtide.backend.image" -}}
 {{- $tag := default .Chart.AppVersion .Values.backend.image.tag }}
 {{- printf "%s:%s" .Values.backend.image.repository $tag }}
 {{- end }}
@@ -135,7 +135,7 @@ Backend image
 {{/*
 Frontend image
 */}}
-{{- define "logward.frontend.image" -}}
+{{- define "logtide.frontend.image" -}}
 {{- $tag := default .Chart.AppVersion .Values.frontend.image.tag }}
 {{- printf "%s:%s" .Values.frontend.image.repository $tag }}
 {{- end }}
@@ -143,7 +143,7 @@ Frontend image
 {{/*
 Worker image (uses backend image)
 */}}
-{{- define "logward.worker.image" -}}
+{{- define "logtide.worker.image" -}}
 {{- $tag := default .Chart.AppVersion .Values.worker.image.tag }}
 {{- printf "%s:%s" .Values.worker.image.repository $tag }}
 {{- end }}
@@ -151,9 +151,9 @@ Worker image (uses backend image)
 {{/*
 Database host
 */}}
-{{- define "logward.database.host" -}}
+{{- define "logtide.database.host" -}}
 {{- if .Values.timescaledb.enabled }}
-{{- printf "%s-timescaledb" (include "logward.fullname" .) }}
+{{- printf "%s-timescaledb" (include "logtide.fullname" .) }}
 {{- else }}
 {{- .Values.externalDatabase.host }}
 {{- end }}
@@ -162,7 +162,7 @@ Database host
 {{/*
 Database port
 */}}
-{{- define "logward.database.port" -}}
+{{- define "logtide.database.port" -}}
 {{- if .Values.timescaledb.enabled }}
 {{- 5432 }}
 {{- else }}
@@ -173,7 +173,7 @@ Database port
 {{/*
 Database name
 */}}
-{{- define "logward.database.name" -}}
+{{- define "logtide.database.name" -}}
 {{- if .Values.timescaledb.enabled }}
 {{- .Values.timescaledb.auth.database }}
 {{- else }}
@@ -184,7 +184,7 @@ Database name
 {{/*
 Database user
 */}}
-{{- define "logward.database.user" -}}
+{{- define "logtide.database.user" -}}
 {{- if .Values.timescaledb.enabled }}
 {{- .Values.timescaledb.auth.username }}
 {{- else }}
@@ -195,22 +195,22 @@ Database user
 {{/*
 Database secret name
 */}}
-{{- define "logward.database.secretName" -}}
+{{- define "logtide.database.secretName" -}}
 {{- if .Values.timescaledb.enabled }}
-{{- printf "%s-timescaledb" (include "logward.fullname" .) }}
+{{- printf "%s-timescaledb" (include "logtide.fullname" .) }}
 {{- else if .Values.externalDatabase.existingSecret }}
 {{- .Values.externalDatabase.existingSecret }}
 {{- else }}
-{{- printf "%s-external-db" (include "logward.fullname" .) }}
+{{- printf "%s-external-db" (include "logtide.fullname" .) }}
 {{- end }}
 {{- end }}
 
 {{/*
 Redis host
 */}}
-{{- define "logward.redis.host" -}}
+{{- define "logtide.redis.host" -}}
 {{- if .Values.redis.enabled }}
-{{- printf "%s-redis" (include "logward.fullname" .) }}
+{{- printf "%s-redis" (include "logtide.fullname" .) }}
 {{- else }}
 {{- .Values.externalRedis.host }}
 {{- end }}
@@ -219,7 +219,7 @@ Redis host
 {{/*
 Redis port
 */}}
-{{- define "logward.redis.port" -}}
+{{- define "logtide.redis.port" -}}
 {{- if .Values.redis.enabled }}
 {{- 6379 }}
 {{- else }}
@@ -230,26 +230,26 @@ Redis port
 {{/*
 Redis secret name
 */}}
-{{- define "logward.redis.secretName" -}}
+{{- define "logtide.redis.secretName" -}}
 {{- if .Values.redis.enabled }}
-{{- printf "%s-redis" (include "logward.fullname" .) }}
+{{- printf "%s-redis" (include "logtide.fullname" .) }}
 {{- else if .Values.externalRedis.existingSecret }}
 {{- .Values.externalRedis.existingSecret }}
 {{- else }}
-{{- printf "%s-external-redis" (include "logward.fullname" .) }}
+{{- printf "%s-external-redis" (include "logtide.fullname" .) }}
 {{- end }}
 {{- end }}
 
 {{/*
 Secrets name
 */}}
-{{- define "logward.secretsName" -}}
-{{- printf "%s-secrets" (include "logward.fullname" .) }}
+{{- define "logtide.secretsName" -}}
+{{- printf "%s-secrets" (include "logtide.fullname" .) }}
 {{- end }}
 
 {{/*
 ConfigMap name
 */}}
-{{- define "logward.configMapName" -}}
-{{- printf "%s-config" (include "logward.fullname" .) }}
+{{- define "logtide.configMapName" -}}
+{{- printf "%s-config" (include "logtide.fullname" .) }}
 {{- end }}

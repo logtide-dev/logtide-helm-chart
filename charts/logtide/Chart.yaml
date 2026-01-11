@@ -1,19 +1,19 @@
 apiVersion: v2
-name: logward
-description: A Helm chart for LogWard - Open-source log management and SIEM platform
+name: logtide
+description: A Helm chart for LogTide - Open-source log management and SIEM platform
 type: application
 version: 1.0.4
 appVersion: "0.3.0"
 
-home: https://logward.dev
-icon: https://raw.githubusercontent.com/logward-dev/logward-helm-chart/main/charts/logward/icon.png
+home: https://logtide.dev
+icon: https://raw.githubusercontent.com/logtide-dev/logtide-helm-chart/main/charts/logtide/icon.png
 sources:
-  - https://github.com/logward-dev/logward
+  - https://github.com/logtide-dev/logtide
 
 maintainers:
-  - name: LogWard Team
-    email: team@logward.dev
-    url: https://github.com/logward-dev
+  - name: LogTide Team
+    email: team@logtide.dev
+    url: https://github.com/logtide-dev
 
 keywords:
   - logging
@@ -29,9 +29,9 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/links: |
     - name: Documentation
-      url: https://docs.logward.dev
+      url: https://docs.logtide.dev
     - name: GitHub
-      url: https://github.com/logward-dev/logward
+      url: https://github.com/logtide-dev/logtide
   artifacthub.io/category: monitoring-logging
 
 # Note: This chart includes embedded TimescaleDB and Redis StatefulSets.

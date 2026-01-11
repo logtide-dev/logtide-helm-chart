@@ -38,7 +38,7 @@ jobs:
         uses: helm/chart-testing-action@v2
 
       - name: Run chart-testing (lint)
-        run: ct lint --config ct.yaml --charts charts/logward
+        run: ct lint --config ct.yaml --charts charts/logtide
 
   # NOTE: Test job disabled until Docker images are published to ghcr.io
   # test:
@@ -60,8 +60,8 @@ jobs:
   #
   #     - name: Install chart
   #       run: |
-  #         helm install logward ./charts/logward \
-  #           --namespace logward \
+  #         helm install logtide ./charts/logtide \
+  #           --namespace logtide \
   #           --create-namespace \
   #           --set timescaledb.auth.password=testpassword \
   #           --set timescaledb.auth.postgresPassword=testpassword \
@@ -71,8 +71,8 @@ jobs:
   #
   #     - name: Verify installation
   #       run: |
-  #         kubectl get pods -n logward
-  #         kubectl get svc -n logward
+  #         kubectl get pods -n logtide
+  #         kubectl get svc -n logtide
 
   release:
     runs-on: ubuntu-latest
@@ -95,7 +95,7 @@ jobs:
             echo "Creating gh-pages branch..."
             git checkout --orphan gh-pages
             git rm -rf .
-            echo "# LogWard Helm Charts" > README.md
+            echo "# LogTide Helm Charts" > README.md
             git add README.md
             git commit -m "Initial gh-pages branch"
             git push origin gh-pages

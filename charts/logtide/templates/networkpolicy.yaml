@@ -2,13 +2,13 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "logward.fullname" . }}
+  name: {{ include "logtide.fullname" . }}
   labels:
-    {{- include "logward.labels" . | nindent 4 }}
+    {{- include "logtide.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
-      {{- include "logward.selectorLabels" . | nindent 6 }}
+      {{- include "logtide.selectorLabels" . | nindent 6 }}
   policyTypes:
     - Ingress
     - Egress
