@@ -2,7 +2,7 @@ apiVersion: v2
 name: logtide
 description: A Helm chart for LogTide - Open-source log management and SIEM platform
 type: application
-version: 2.0.1
+version: 2.0.2
 appVersion: "0.4.0"
 
 home: https://logtide.dev
@@ -29,7 +29,7 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/links: |
     - name: Documentation
-      url: https://docs.logtide.dev
+      url: https://logtide.dev/docs
     - name: GitHub
       url: https://github.com/logtide-dev/logtide
   artifacthub.io/category: monitoring-logging
