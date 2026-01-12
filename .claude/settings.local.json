@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "WebFetch(domain:logtide-dev.github.io)",
+      "Bash(git fetch:*)",
+      "Bash(git checkout:*)"
+    ]
+  }
+}
