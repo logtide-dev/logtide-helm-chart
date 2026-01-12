@@ -2,8 +2,8 @@ apiVersion: v2
 name: logtide
 description: A Helm chart for LogTide - Open-source log management and SIEM platform
 type: application
-version: 2.0.0
-appVersion: "0.3.0"
+version: 2.0.1
+appVersion: "0.4.0"
 
 home: https://logtide.dev
 icon: https://raw.githubusercontent.com/logtide-dev/logtide-helm-chart/main/charts/logtide/icon.png
@@ -12,7 +12,7 @@ sources:
 
 maintainers:
   - name: LogTide Team
-    email: team@logtide.dev
+    email: support@logtide.dev
     url: https://github.com/logtide-dev
 
 keywords:
