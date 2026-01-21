@@ -78,6 +78,9 @@ See [values.yaml](charts/logtide/values.yaml) for the full list of configurable 
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `config.apiKeySecret` | API key encryption secret (32+ chars) | Auto-generated |
+| `config.jwtSecret` | JWT authentication secret | Auto-generated |
+| `config.sessionSecret` | Session encryption secret | Auto-generated |
 | `backend.replicaCount` | Number of backend replicas | `2` |
 | `backend.autoscaling.enabled` | Enable HPA for backend | `true` |
 | `frontend.replicaCount` | Number of frontend replicas | `2` |

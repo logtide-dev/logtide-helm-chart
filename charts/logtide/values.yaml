@@ -290,6 +290,10 @@ config:
   # Session secret (auto-generated if empty)
   sessionSecret: ""
 
+  # API key encryption secret (auto-generated if empty)
+  # Used to encrypt API keys at rest. Must be at least 32 characters.
+  apiKeySecret: ""
+
   # CORS origins (comma-separated)
   corsOrigins: ""
 
