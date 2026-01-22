@@ -2,7 +2,7 @@ apiVersion: v2
 name: logtide
 description: A Helm chart for LogTide - Open-source log management and SIEM platform
 type: application
-version: 2.0.4
+version: 2.0.5
 appVersion: "0.4.0"
 
 home: https://logtide.dev
