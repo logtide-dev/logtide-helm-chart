@@ -80,11 +80,11 @@ frontend:
     tag: ""  # Defaults to appVersion
     pullPolicy: IfNotPresent
 
-  # Public API URL for browser requests
+  # Public API URL for browser requests (base URL without /api suffix)
   # This URL must be accessible from the user's browser (not internal k8s DNS)
-  # If empty and ingress is enabled, defaults to https://{ingress-host}/api
+  # If empty and ingress is enabled, defaults to https://{ingress-host}
   # Examples:
-  #   - "https://logtide.example.com/api" (with ingress)
+  #   - "https://logtide.example.com" (with ingress)
   #   - "http://localhost:8080" (local development with port-forward)
   publicApiUrl: ""
 

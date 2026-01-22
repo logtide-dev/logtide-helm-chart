@@ -52,7 +52,7 @@ spec:
               {{- if not .Values.ingress.tls }}
               {{- $scheme = "http" }}
               {{- end }}
-              value: "{{ $scheme }}://{{ (index .Values.ingress.hosts 0).host }}/api"
+              value: "{{ $scheme }}://{{ (index .Values.ingress.hosts 0).host }}"
               {{- else }}
               value: "http://{{ include "logtide.fullname" . }}-backend:{{ .Values.backend.service.port }}"
               {{- end }}
