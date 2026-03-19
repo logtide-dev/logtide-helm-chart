@@ -23,8 +23,16 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Bump versions in Chart.yaml
+        id: bump
         run: |
           APP_VERSION="${{ github.event.client_payload.version }}"
+          CURRENT_APP=$(grep '^appVersion:' charts/logtide/Chart.yaml | awk '{print $2}' | tr -d '"')
+
+          if [ "$CURRENT_APP" = "$APP_VERSION" ]; then
+            echo "already at appVersion $APP_VERSION, skipping"
+            echo "changed=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
 
           CURRENT=$(grep '^version:' charts/logtide/Chart.yaml | awk '{print $2}')
           MAJOR=$(echo $CURRENT | cut -d. -f1)
@@ -37,22 +45,17 @@ jobs:
 
           echo "chart: ${CURRENT} → ${NEW_CHART_VERSION}"
           echo "appVersion: ${APP_VERSION}"
+          echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Commit and push
-        id: commit
+        if: steps.bump.outputs.changed == 'true'
         run: |
           git add charts/logtide/Chart.yaml
-          if git diff --staged --quiet; then
-            echo "no changes, skipping"
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            git commit -m "bump to logtide v${{ github.event.client_payload.version }}"
-            git push origin main
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
+          git commit -m "bump to logtide v${{ github.event.client_payload.version }}"
+          git push origin main
 
       - name: Trigger release workflow
-        if: steps.commit.outputs.changed == 'true'
+        if: steps.bump.outputs.changed == 'true'
         run: gh workflow run release.yaml --ref main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
