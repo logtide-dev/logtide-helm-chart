@@ -1,0 +1,45 @@
+name: Update App Version
+
+on:
+  repository_dispatch:
+    types: [logtide-release]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump versions in Chart.yaml
+        run: |
+          APP_VERSION="${{ github.event.client_payload.version }}"
+
+          CURRENT=$(grep '^version:' charts/logtide/Chart.yaml | awk '{print $2}')
+          MAJOR=$(echo $CURRENT | cut -d. -f1)
+          MINOR=$(echo $CURRENT | cut -d. -f2)
+          PATCH=$(echo $CURRENT | cut -d. -f3)
+          NEW_CHART_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+
+          sed -i "s/^version:.*/version: ${NEW_CHART_VERSION}/" charts/logtide/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: \"${APP_VERSION}\"/" charts/logtide/Chart.yaml
+
+          echo "chart: ${CURRENT} → ${NEW_CHART_VERSION}"
+          echo "appVersion: ${APP_VERSION}"
+
+      - name: Commit and push
+        run: |
+          git add charts/logtide/Chart.yaml
+          git diff --staged --quiet && echo "no changes, skipping" && exit 0
+          git commit -m "bump to logtide v${{ github.event.client_payload.version }}"
+          git push origin main
