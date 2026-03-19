@@ -188,7 +188,7 @@ ingress:
     #     - logtide.example.com
 
 # =============================================================================
-# TIMESCALEDB CONFIGURATION
+# TIMESCALEDB CONFIGURATION (embedded - used when storageEngine: timescale)
 # =============================================================================
 timescaledb:
   # Use embedded TimescaleDB StatefulSet
@@ -232,7 +232,7 @@ timescaledb:
   tolerations: []
   affinity: {}
 
-# External database (if timescaledb.enabled: false)
+# External PostgreSQL/TimescaleDB (if timescaledb.enabled: false)
 externalDatabase:
   host: ""
   port: 5432
@@ -240,6 +240,38 @@ externalDatabase:
   username: logtide
   password: ""
   # Use existing secret
+  existingSecret: ""
+  existingSecretPasswordKey: "password"
+
+# =============================================================================
+# CLICKHOUSE CONFIGURATION (used when storageEngine: clickhouse)
+# =============================================================================
+clickhouse:
+  # Connection to an external ClickHouse instance
+  host: ""
+  port: 8123
+  database: logtide
+  username: default
+  password: ""
+  # Use existing secret for the password
+  existingSecret: ""
+  existingSecretPasswordKey: "password"
+
+# =============================================================================
+# MONGODB CONFIGURATION (used when storageEngine: mongodb)
+# =============================================================================
+mongodb:
+  # Option 1: full connection URI (takes precedence over individual settings)
+  # e.g. "mongodb://user:pass@host:27017/logtide?authSource=admin"
+  uri: ""
+  # Option 2: individual connection settings
+  host: ""
+  port: 27017
+  database: logtide
+  username: ""
+  password: ""
+  authSource: ""
+  # Use existing secret for uri or password
   existingSecret: ""
   existingSecretPasswordKey: "password"
 
@@ -295,6 +327,20 @@ config:
   # Log level (debug, info, warn, error)
   logLevel: info
 
+  # Storage engine: timescale | clickhouse | mongodb
+  # - timescale: uses the embedded or external TimescaleDB (default)
+  # - clickhouse: uses external ClickHouse (configure clickhouse section)
+  # - mongodb: uses external MongoDB (configure mongodb section)
+  storageEngine: timescale
+
+  # Trust reverse proxy headers (X-Forwarded-For, X-Forwarded-Proto)
+  # Set to true when running behind nginx/traefik ingress
+  trustProxy: true
+
+  # Frontend URL for OIDC redirects
+  # Defaults to https://{ingress-host} when ingress is enabled
+  frontendUrl: ""
+
   # JWT secret for authentication (auto-generated if empty)
   jwtSecret: ""
 
@@ -305,13 +351,24 @@ config:
   # Used to encrypt API keys at rest. Must be at least 32 characters.
   apiKeySecret: ""
 
-  # CORS origins (comma-separated)
+  # CORS origins (comma-separated). Defaults to ingress host when enabled.
   corsOrigins: ""
 
-  # Rate limiting
+  # Response caching
+  cache:
+    enabled: true
+    ttl: 60  # seconds
+
+  # General rate limiting
   rateLimit:
-    auth: 10  # requests per 15 minutes
-    ingestion: 200  # requests per minute
+    max: 1000       # requests per window
+    window: 60000   # window in ms (1 minute)
+
+  # Auth-specific rate limiting
+  authRateLimit:
+    register: 10       # registrations per window
+    login: 20          # login attempts per window
+    window: 900000     # window in ms (15 minutes)
 
   # Retention policy (days)
   retention:
@@ -326,10 +383,16 @@ config:
     port: 587
     secure: false
     user: ""
-    password: ""
+    pass: ""
     from: "noreply@logtide.dev"
     # Use existing secret for SMTP credentials
     existingSecret: ""
+
+  # Initial admin user (created on first deployment if no users exist)
+  initialAdmin:
+    email: ""
+    password: ""
+    name: ""
 
 # =============================================================================
 # MONITORING & OBSERVABILITY

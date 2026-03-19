@@ -84,6 +84,28 @@ spec:
             - name: REDIS_URL
               value: "redis://$(REDIS_HOST):$(REDIS_PORT)"
             {{- end }}
+            {{- if eq .Values.config.storageEngine "clickhouse" }}
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.clickhouse.existingSecret }}{{ .Values.clickhouse.existingSecret }}{{ else }}{{ include "logtide.fullname" . }}-clickhouse{{ end }}
+                  key: {{ .Values.clickhouse.existingSecretPasswordKey }}
+            {{- end }}
+            {{- if eq .Values.config.storageEngine "mongodb" }}
+            {{- if .Values.mongodb.uri }}
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.mongodb.existingSecret }}{{ .Values.mongodb.existingSecret }}{{ else }}{{ include "logtide.fullname" . }}-mongodb{{ end }}
+                  key: {{ if .Values.mongodb.existingSecret }}{{ .Values.mongodb.existingSecretPasswordKey }}{{ else }}uri{{ end }}
+            {{- else }}
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.mongodb.existingSecret }}{{ .Values.mongodb.existingSecret }}{{ else }}{{ include "logtide.fullname" . }}-mongodb{{ end }}
+                  key: {{ .Values.mongodb.existingSecretPasswordKey }}
+            {{- end }}
+            {{- end }}
           resources:
             {{- toYaml .Values.worker.resources | nindent 12 }}
       {{- with .Values.worker.nodeSelector }}

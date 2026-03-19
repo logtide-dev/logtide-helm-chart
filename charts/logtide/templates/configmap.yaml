@@ -8,14 +8,16 @@ data:
   NODE_ENV: {{ .Values.config.nodeEnv | quote }}
   LOG_LEVEL: {{ .Values.config.logLevel | quote }}
 
-  # Rate Limiting
-  RATE_LIMIT_AUTH: {{ .Values.config.rateLimit.auth | quote }}
-  RATE_LIMIT_INGESTION: {{ .Values.config.rateLimit.ingestion | quote }}
+  # Storage engine
+  STORAGE_ENGINE: {{ .Values.config.storageEngine | quote }}
 
-  # Retention
-  RETENTION_LOGS_DAYS: {{ .Values.config.retention.logs | quote }}
-  RETENTION_ALERTS_DAYS: {{ .Values.config.retention.alerts | quote }}
-  RETENTION_INCIDENTS_DAYS: {{ .Values.config.retention.incidents | quote }}
+  # Proxy & URLs
+  TRUST_PROXY: {{ .Values.config.trustProxy | quote }}
+  {{- if .Values.config.frontendUrl }}
+  FRONTEND_URL: {{ .Values.config.frontendUrl | quote }}
+  {{- else if .Values.ingress.enabled }}
+  FRONTEND_URL: "https://{{ (index .Values.ingress.hosts 0).host }}"
+  {{- end }}
 
   # CORS
   {{- if .Values.config.corsOrigins }}
@@ -24,6 +26,24 @@ data:
   CORS_ORIGINS: "https://{{ (index .Values.ingress.hosts 0).host }}"
   {{- end }}
 
+  # Caching
+  CACHE_ENABLED: {{ .Values.config.cache.enabled | quote }}
+  CACHE_TTL: {{ .Values.config.cache.ttl | quote }}
+
+  # General rate limiting
+  RATE_LIMIT_MAX: {{ .Values.config.rateLimit.max | quote }}
+  RATE_LIMIT_WINDOW: {{ .Values.config.rateLimit.window | quote }}
+
+  # Auth rate limiting
+  AUTH_RATE_LIMIT_REGISTER: {{ .Values.config.authRateLimit.register | quote }}
+  AUTH_RATE_LIMIT_LOGIN: {{ .Values.config.authRateLimit.login | quote }}
+  AUTH_RATE_LIMIT_WINDOW: {{ .Values.config.authRateLimit.window | quote }}
+
+  # Retention
+  RETENTION_LOGS_DAYS: {{ .Values.config.retention.logs | quote }}
+  RETENTION_ALERTS_DAYS: {{ .Values.config.retention.alerts | quote }}
+  RETENTION_INCIDENTS_DAYS: {{ .Values.config.retention.incidents | quote }}
+
   # SMTP Configuration
   {{- if .Values.config.smtp.enabled }}
   SMTP_ENABLED: "true"
@@ -31,4 +51,25 @@ data:
   SMTP_PORT: {{ .Values.config.smtp.port | quote }}
   SMTP_SECURE: {{ .Values.config.smtp.secure | quote }}
   SMTP_FROM: {{ .Values.config.smtp.from | quote }}
+  {{- end }}
+
+  # ClickHouse (when storageEngine: clickhouse)
+  {{- if eq .Values.config.storageEngine "clickhouse" }}
+  CLICKHOUSE_HOST: {{ .Values.clickhouse.host | quote }}
+  CLICKHOUSE_PORT: {{ .Values.clickhouse.port | quote }}
+  CLICKHOUSE_DATABASE: {{ .Values.clickhouse.database | quote }}
+  CLICKHOUSE_USERNAME: {{ .Values.clickhouse.username | quote }}
+  {{- end }}
+
+  # MongoDB (when storageEngine: mongodb)
+  {{- if eq .Values.config.storageEngine "mongodb" }}
+  {{- if not .Values.mongodb.uri }}
+  MONGODB_HOST: {{ .Values.mongodb.host | quote }}
+  MONGODB_PORT: {{ .Values.mongodb.port | quote }}
+  MONGODB_DATABASE: {{ .Values.mongodb.database | quote }}
+  MONGODB_USERNAME: {{ .Values.mongodb.username | quote }}
+  {{- if .Values.mongodb.authSource }}
+  MONGODB_AUTH_SOURCE: {{ .Values.mongodb.authSource | quote }}
+  {{- end }}
+  {{- end }}
   {{- end }}
