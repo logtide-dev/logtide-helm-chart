@@ -10,6 +10,41 @@ entries:
         - name: GitHub
           url: https://github.com/logtide-dev/logtide
     apiVersion: v2
+    appVersion: 1.0.2
+    created: "2026-06-22T07:16:26.256738762Z"
+    description: A Helm chart for LogTide - Open-source log management and SIEM platform
+    digest: eb6beda5fea85b8c82147557f283cdb31f55e34f42b75fc57694e77b24643fa0
+    home: https://logtide.dev
+    icon: https://raw.githubusercontent.com/logtide-dev/logtide-helm-chart/main/charts/logtide/icon.png
+    keywords:
+    - logging
+    - logs
+    - siem
+    - security
+    - observability
+    - monitoring
+    - timescaledb
+    - sigma
+    maintainers:
+    - email: support@logtide.dev
+      name: LogTide Team
+      url: https://github.com/logtide-dev
+    name: logtide
+    sources:
+    - https://github.com/logtide-dev/logtide
+    type: application
+    urls:
+    - https://github.com/logtide-dev/logtide-helm-chart/releases/download/logtide-2.1.14/logtide-2.1.14.tgz
+    version: 2.1.14
+  - annotations:
+      artifacthub.io/category: monitoring-logging
+      artifacthub.io/license: MIT
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://logtide.dev/docs
+        - name: GitHub
+          url: https://github.com/logtide-dev/logtide
+    apiVersion: v2
     appVersion: 1.0.1
     created: "2026-06-19T20:20:33.042986536Z"
     description: A Helm chart for LogTide - Open-source log management and SIEM platform
@@ -771,4 +806,4 @@ entries:
     urls:
     - https://github.com/logtide-dev/logtide-helm-chart/releases/download/logtide-2.0.0/logtide-2.0.0.tgz
     version: 2.0.0
-generated: "2026-06-19T20:20:33.043154568Z"
+generated: "2026-06-22T07:16:26.256889388Z"
